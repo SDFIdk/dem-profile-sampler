@@ -133,7 +133,7 @@ def get_raster_interpolator(dataset: gdal.Dataset) -> RegularGridInterpolator:
     return interpolator
 
 def get_2d_normals(vectors: np.array) -> np.array:
-    raw_normals = np.column_stack([vectors[:, 1], -vectors[:, 0]])
+    raw_normals = np.column_stack([-vectors[:, 1], vectors[:, 0]])
 
     # normalize to unit length
     unit_normals = raw_normals / np.hypot(raw_normals[:, 0], raw_normals[:, 1])[:, np.newaxis]
@@ -176,8 +176,8 @@ def get_profiles(centerline: ogr.Geometry, raster: gdal.Dataset, output_layer: o
     sampling_vectors = segment_vectors[sampling_indices, :]
     sampling_normals = get_2d_normals(sampling_vectors)
 
-    profile_left = sampling_centers - 0.5 * profile_length * sampling_normals
-    profile_right = sampling_centers + 0.5 * profile_length * sampling_normals
+    profile_left = sampling_centers + 0.5 * profile_length * sampling_normals
+    profile_right = sampling_centers - 0.5 * profile_length * sampling_normals
 
     # linspace generates [place_on_profile, profile_index, xy], swap axes to [profile_index, place_on_profile, xy]
     profiles = np.linspace(profile_left, profile_right, sample_count).swapaxes(0, 1)
