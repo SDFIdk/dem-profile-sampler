@@ -1,0 +1,9 @@
+name: profilesample-dev
+channels:
+  - conda-forge
+dependencies:
+  - gdal
+  - numpy
+  - pytest
+  - scipy
+  - tqdm

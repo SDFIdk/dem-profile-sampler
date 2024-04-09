@@ -1,0 +1,12 @@
+[project]
+name = "dem-profile-sampler"
+version = "0.1.0"
+authors = [
+    {name = "Danish Agency for Data Supply and Infrastructure (SDFI)", email = "sdfi@sdfi.dk"},
+]
+description = "Tool to sample profiles from raster DEMs along river centerlines"
+readme = "README.md"
+license = {file = "LICENSE"}
+
+[project.scripts]
+sample_profiles = "profilesample.cli:main"
