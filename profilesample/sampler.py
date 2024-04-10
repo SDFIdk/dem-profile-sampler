@@ -144,16 +144,6 @@ def get_profiles(centerline: ogr.Geometry, raster: gdal.Dataset, output_layer: o
     centerline_xyz = np.array(centerline.GetPoints())
     centerline_xy = centerline_xyz[:,:2]
 
-    x_min = min(centerline_xyz[:,0])
-    x_max = max(centerline_xyz[:,0])
-    y_min = min(centerline_xyz[:,1])
-    y_max = max(centerline_xyz[:,1])
-
-    geometry_bbox = BoundingBox(x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max)
-
-    window_dataset = get_raster_window(raster, geometry_bbox)
-    window_interpolator = get_raster_interpolator(window_dataset)
-
     centerline_length = centerline.Length()
     segment_vectors = np.column_stack([centerline_xy[1:, 0] - centerline_xy[:-1, 0], centerline_xy[1:,1] - centerline_xy[:-1, 1]])
     segment_lengths = np.hypot(segment_vectors[:, 0], segment_vectors[:, 1])
@@ -185,6 +175,16 @@ def get_profiles(centerline: ogr.Geometry, raster: gdal.Dataset, output_layer: o
     output_layer_defn = output_layer.GetLayerDefn()
 
     for profile_xy in profiles:
+        x_min = min(profile_xy[0, 0], profile_xy[-1, 0])
+        x_max = max(profile_xy[0, 0], profile_xy[-1, 0])
+        y_min = min(profile_xy[0, 1], profile_xy[-1, 1])
+        y_max = max(profile_xy[0, 1], profile_xy[-1, 1])
+
+        geometry_bbox = BoundingBox(x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max)
+
+        window_dataset = get_raster_window(raster, geometry_bbox)
+        window_interpolator = get_raster_interpolator(window_dataset)
+
         profile_z = window_interpolator(profile_xy)
         profile_geometry = ogr.Geometry(ogr.wkbLineString25D)
         for xy, z in zip(profile_xy, profile_z):
