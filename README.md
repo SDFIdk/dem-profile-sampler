@@ -35,6 +35,7 @@ sample_profiles [-h] [--interval INTERVAL] [--length LENGTH] [--sample-count SAM
 | `--interval INTERVAL` | Preferred interval (along centerlines) between profiles, in georeferenced units |
 | `--length LENGTH` | Length of profiles in georeferenced units |
 | `--sample-count SAMPLE_COUNT` | Number of samples to take along each profile |
+| `--progress` | Show progress bar while processing |
 | `-h` | Print help and exit |
 
 ## Example
