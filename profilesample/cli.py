@@ -36,6 +36,18 @@ def main():
 
     dem_dataset = gdal.Open(dem_path)
 
+    # Extract bounding box (does not support geotransforms with rotation)
+    dem_band = dem_dataset.GetRasterBand(1)
+    dem_geotransform = dem_dataset.GetGeoTransform()
+    dem_cols = dem_band.XSize
+    dem_rows = dem_band.YSize
+    x_min = min(dem_geotransform[0], dem_geotransform[0] + dem_cols * dem_geotransform[1])
+    x_max = max(dem_geotransform[0], dem_geotransform[0] + dem_cols * dem_geotransform[1])
+    y_min = min(dem_geotransform[3], dem_geotransform[3] + dem_rows * dem_geotransform[5])
+    y_max = max(dem_geotransform[3], dem_geotransform[3] + dem_rows * dem_geotransform[5])
+
+    centerline_layer.SetSpatialFilterRect(x_min, y_min, x_max, y_max)
+
     output_driver = ogr.GetDriverByName('GPKG')
     output_datasrc = output_driver.CreateDataSource(profile_path)
     output_layer = output_datasrc.CreateLayer('profiles', srs, ogr.wkbLineString25D)
