@@ -2,7 +2,6 @@ from osgeo import gdal, ogr
 from tqdm import tqdm
 
 import argparse
-from pathlib import Path
 
 import profilesample
 import profilesample.sampler
